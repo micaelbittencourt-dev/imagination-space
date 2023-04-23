@@ -14,7 +14,8 @@ import {
   Texture,
   DynamicTexture,
   Space,
-  MeshBuilder
+  MeshBuilder,
+  Material
 } from '@babylonjs/core';
 
 @Injectable({ providedIn: 'root' })
@@ -44,7 +45,7 @@ export class EngineService {
     //this.scene.clearColor = Color4.FromColor3(Color3.Green());
 
     // create a FreeCamera, and set its position to (x:5, y:10, z:-20 )
-    this.camera = new FreeCamera('camera1', new Vector3(2, 10, -20), this.scene);
+    this.camera = new FreeCamera('camera1', new Vector3(0, 25, 0), this.scene);
 
     // target the camera to scene origin
     this.camera.setTarget(Vector3.Zero());
@@ -56,19 +57,33 @@ export class EngineService {
     this.light = new HemisphericLight('light1', new Vector3(0, 1, 0), this.scene);
     this.light.intensity = 0.5;
     // create a built-in "sphere" shape; its constructor takes 4 params: name, subdivisions, radius, scene
-    this.ground = MeshBuilder.CreateGround('ground1',{width: 10, height: 10}, this.scene);
-    this.generateBox();
+    this.ground = MeshBuilder.CreateGround('ground1',{width: 15, height: 20}, this.scene);
 
     // generates the world x-y-z axis for better understanding
-    //this.showWorldAxis(8);
+    // this.showWorldAxis(8);
   }
 
   public generateBox(size?:number, width?:number, height?:number, x?:number, y?:number, z?:number){
     let box = MeshBuilder.CreateBox("box1",{size: size??1, width: width??1, height: height??1})
+    let boxMaterial = new StandardMaterial("Ground Material", this.scene);
+    boxMaterial.diffuseColor = Color3.Random();
+    box.material = boxMaterial;
     box.position.x = x ?? 1;
     box.position.z = z ?? 1;
     box.position.y = y ?? .5;
+    
   }
+
+  public generateGround(width?:number, height?:number, x?:number, y?:number, z?:number){
+    let ground = MeshBuilder.CreateGround('ground2',{width: width, height: height}, this.scene);
+    let groundMaterial = new StandardMaterial("Ground Material", this.scene);
+    groundMaterial.diffuseColor = Color3.Blue();
+    ground.material = groundMaterial;
+    ground.position.x = x ?? 1;
+    ground.position.z = z ?? 1;
+    ground.position.y = y ?? .5;
+  }
+  
 
   public animate(): void {
     // We have to run this outside angular zones,
